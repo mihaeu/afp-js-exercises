@@ -267,5 +267,5 @@ module.exports.List.range = (to) => {
  * @returns {List}
  */
 module.exports.List.primes = (n) => {
-  return List.range(n)  .primes();
+  return List.range(n).primes();
 }

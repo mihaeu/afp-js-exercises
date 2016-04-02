@@ -8,7 +8,7 @@ let solveEightQueens = (rows, cols) => {
 let addQueen = (newRows, cols, prevAnswer) => {
   let newAnswer = [];
   for (let answer of prevAnswer) {
-    for (let col = 0; col < cols; col += col) {
+    for (let col = 0; col < cols.length; col += col) {
       if (noConflict(newRows, col, answer)) newAnswer.push(answer.concat([col]));
     }
   }
@@ -16,7 +16,7 @@ let addQueen = (newRows, cols, prevAnswer) => {
 };
 
 let noConflict = (rows, cols, answer) => {
-  for (let row = 0; row < rows; row += 1) {
+  for (let row = 0; row < rows.length; row += 1) {
     if (answer[row] === cols || answer[row] + row === cols + row || answer[row] - row === cols - row) return false;
   }
   return true;
