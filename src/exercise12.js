@@ -22,8 +22,6 @@ let noConflict = (rows, cols, answer) => {
   return true;
 };
 
-console.log(solveEightQueens(8, 8));
-
 module.exports = {
   solveEightQueens,
   addQueen,
