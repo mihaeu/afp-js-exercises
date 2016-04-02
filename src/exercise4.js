@@ -1,0 +1,1 @@
+module.exports.fib = (n) => 0;

@@ -1,0 +1,1 @@
+module.exports.faculty = (n) => 0;
