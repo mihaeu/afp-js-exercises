@@ -3,7 +3,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     exec: {
       tests: {
-        command: 'node_modules/jasmine-node/bin/jasmine-node tests'
+        command: 'node_modules/jasmine-node/bin/jasmine-node tests --growl'
       }
     },
     watch: {
