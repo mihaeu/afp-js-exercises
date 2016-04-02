@@ -12,18 +12,6 @@ var List = class List {
   }
 
   /**
-   * @param {number[]} xs
-   * @returns {List}
-   */
-  fromArray(xs) {
-    var list = List.EMPTY;
-    for (const x of xs.reverse()) {
-      list = list.prependValue(x);
-    }
-    return list;
-  }
-
-  /**
    * @param {number} value
    * @returns {List}
    */
@@ -158,12 +146,30 @@ var List = class List {
       .appendList(this.tail.filter(i => i >= this.head).sort());
   }
 
+  /**
+   * @returns {List}
+   */
   primes() {
-
+    if (this === List.EMPTY) return this;
+    return this.tail.filter(i => (i % this.head) !== 0).primes().prependValue(this.head);
   }
 
-  shuffle(Random) {
+  /**
+   * return {number}
+   */
+  length() {
+    return (this === List.EMPTY) ? 0 : 1 + this.tail.length();
+  }
 
+  /**
+   * @param {number} length
+   * @returns {List}
+   */
+  shuffle(length) {
+    length = length || this.length();
+    if (length < 2) return this;
+    let pop = this.pop(Math.floor(Math.random() * length));
+    return pop.tail.shuffle(length - 1).prependValue(pop.head);
   }
 
   /**
@@ -176,27 +182,90 @@ var List = class List {
     return this.tail.filter(fn);
   }
 
-  foreach() {
-
+  /**
+   * @callback fn
+   */
+  forEach(fn) {
+    if (this === List.EMPTY) return;
+    fn(this.head);
+    this.tail.forEach(fn);
   }
 
-  reduceL() {
-
+  /**
+   * @param {callback} fn
+   * @param {number} init
+   * @returns {*}
+   */
+  foldL(fn, init) {
+    let list = this, result = init;
+    while (list != List.EMPTY) {
+      result = fn(result, list.head);
+      list = list.tail;
+    }
+    return result;
   }
 
-  reduceR() {
-
+  reduceL(fn) {
+    return this.tail.foldL(fn, this.head);
   }
 
-  map() {
-
+  /**
+   * @param fn
+   * @returns {*}
+   */
+  reduceR(fn) {
+    if (this.tail === List.EMPTY) return this.head;
+    return fn(this.head, this.tail.reduceR(fn));
   }
 
-  zip() {
+  /**
+   * @callback fn
+   * @returns {List}
+   */
+  map(fn) {
+    if (this === List.EMPTY) return this;
+    return this.tail.map(fn).prependValue(fn(this.head));
+  }
 
+  /**
+   * @param {callback} fn
+   * @param {List} list
+   * @returns {List}
+   */
+  zip(fn, list) {
+    if (this === List.EMPTY || list === List.EMPTY) return List.EMPTY;
+    return this.tail.zip(fn, list.tail).prependValue(fn(this.head, list.head));
   }
 
 };
 
 module.exports.List = List;
 module.exports.List.EMPTY = new List(0, null);
+
+/**
+ * @param {number[]} xs
+ * @returns {List}
+ */
+module.exports.List.fromArray = (xs) => {
+  var list = List.EMPTY;
+  for (const x of xs.reverse()) {
+    list = list.prependValue(x);
+  }
+  return list;
+};
+
+/**
+ * @param {number} to
+ * @returns {List}
+ */
+module.exports.List.range = (to) => {
+  return List.fromArray(Array.apply(null, { length: to }).map(Number.call, Number));
+};
+
+/**
+ * @param {number} n
+ * @returns {List}
+ */
+module.exports.List.primes = (n) => {
+  return List.range(n)  .primes();
+}
